@@ -1,0 +1,26 @@
+{
+  "name": "cordova-azure-notification-hub",
+  "version": "1.0.0",
+  "description": "cordova azure notification hub plugin for ios",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/divakarlasrinivas/cordova-azure-notification-hub.git"
+  },
+  "keywords": [
+    "azure",
+    "notification",
+    "cordova",
+    "plugin",
+    "ios"
+  ],
+  "author": "Srinivas Divakarla and Mohmmad Farooq",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/divakarlasrinivas/cordova-azure-notification-hub/issues"
+  },
+  "homepage": "https://github.com/divakarlasrinivas/cordova-azure-notification-hub#readme"
+}

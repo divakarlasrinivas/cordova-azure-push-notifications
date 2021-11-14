@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-azure-notificationhub" version="1.0">
+   <name>cordova-azure-notification-hub</name>
+   <js-module name="cordova-azure-notification-hub" src="www/cordova-azure-notification-hub.js">
+      <!-- <clobbers target="cordova.plugins.cordova-azure-notification-hub" /> -->
+       <clobbers target="PushPlugin" />
+      PushPlugin
+   </js-module>
+   <platform name="ios">
+      <config-file parent="/*" target="config.xml">
+         <feature name="PushPlugin">
+            <param name="ios-package" value="PushPlugin" />
+         </feature>
+      </config-file>
+
+      <source-file src="src/ios/AppDelegate+notification.h"/>
+      <source-file src="src/ios/AppDelegate+notification.m"/>
+      <source-file src="src/ios/PushPlugin.h"/>
+       <source-file src="src/ios/PushPlugin.m"/>
+      <framework src="src/ios/WindowsAzureMessaging.framework" embed="false" custom="true" />
+   </platform>
+</plugin>
