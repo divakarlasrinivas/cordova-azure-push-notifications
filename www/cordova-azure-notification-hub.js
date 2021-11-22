@@ -17,37 +17,15 @@ module.exports.getUserData = function (success, error) {
 var PushPlugin = {
     // Get Azure Notification Hub setting --------------------------------------------------------->
     getNotificationHubSettings: function () {
+        console.log("PushPlugin :: getNotificationHubSettings");
         return new Promise(function (resolve, reject) {
             AppPreferencesAzure = {
-                "hubNameAzure": 'myhubname',
-                "connectionStringAzure": 'myhubconnectionstring'
+                "hubNameAzure": 'YOUR_AZURE_HUB_NAME',
+                "connectionStringAzure": 'CONNECTION_STRING'
             };
             resolve();
         });
-        // return new Promise(function (resolve, reject) {
-        //     const aSettings = ["hubNameAzure", "connectionStringAzure"];
 
-
-        // sap.AppPreferences.getPreferenceValues(aSettings,
-        //     function successCallback(oSettings) {
-        //         if (oSettings &&
-        //             oSettings.hubNameAzure &&
-        //             oSettings.connectionStringAzure) {
-
-        //             AppPreferencesAzure = {
-        //                 "hubNameAzure": oSettings.hubNameAzure,
-        //                 "connectionStringAzure": oSettings.connectionStringAzure
-        //             };
-
-        //             resolve();
-
-        //         } else {
-        //             reject("An error occurs while retrieving preference values with keys!");
-        //         }
-        //     }.bind(this), reject);
-
-
-        //  }.bind(this));
     },
 
     // Native device registration ----------------------------------------------------------------->
@@ -100,22 +78,33 @@ var PushPlugin = {
         return new Promise(function (resolve, reject) {
             exec(resolve, reject, PLUGIN_NAME, 'unRegisterDevice', [AppPreferencesAzure.hubNameAzure, AppPreferencesAzure.connectionStringAzure]);
         });
+    },
+
+
+    // NOTIFICATION CALLBACK //
+    onNotification: function (callback, success, error) {
+        return new Promise(function (resolve, reject) {
+            console.log("onNotification:::::::" + success);
+            PushPlugin.onNotificationReceived = callback;
+            exec(success, error, PLUGIN_NAME, 'registerNotification', []);
+        });
+    },
+    // DEFAULT NOTIFICATION CALLBACK //
+    onNotificationReceived: function (payload) {
+        return new Promise(function (resolve, reject) {
+            console.log("Received push notification JAVASCRIPT *************");
+            console.log(payload);
+        });
     }
 
 };
 
+
+
+exec(function (result) { console.log("Push Plugin Ready OK") }, function (result) { console.log("Push Plugin Ready ERROR") }, PLUGIN_NAME, 'ready', []);
 // Export --------------------------------------------------------------------------------------->
 module.exports = PushPlugin;
 
-// Raise from Fiori Client on FLP Logon: Call native device registration ------------------------>
-// document.addEventListener("onSapLogonSuccess", PushPlugin.registerDeviceStart, false);
+
 document.addEventListener("deviceready", PushPlugin.registerDeviceStart, false);
 
-// if (window["sap"] && sap.logon && sap.logon.Core) {
-//     const fn = sap.logon.Core.deleteRegistration;
-
-//     sap.logon.Core.deleteRegistration = function (successCallback, errorCallback) {
-//         PushPlugin.unRegisterDeviceStart();
-//         fn.call(null, successCallback, errorCallback);
-//     }
-// }

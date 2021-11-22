@@ -1,13 +1,35 @@
 #import "PushPlugin.h"
+#import "AppDelegate+notification.h"
 
 @implementation PushPlugin: CDVPlugin
 
 NSString* user             = nil;
 NSString* hubName          = nil;
 NSString* connectionString = nil;
+static BOOL notificatorReceptorReady = NO;
+static BOOL appInForeground = YES;
+static NSString *notificationCallback = @"PushPlugin.onNotificationReceived";
+static PushPlugin *pushPluginInstance;
 
++ (PushPlugin *) pushPlugin {
+    
+    return pushPluginInstance;
+}
+- (void) ready:(CDVInvokedUrlCommand *)command
+{
+    NSLog(@"Cordova view ready");
+    pushPluginInstance = self;
+    [self.commandDelegate runInBackground:^{
+        
+        CDVPluginResult* pluginResult = nil;
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+    
+}
 
 - (void)registerDevice:(CDVInvokedUrlCommand *)command {
+    
     
 
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -110,5 +132,28 @@ NSString* connectionString = nil;
     
     NSLog(@"Native unregisterDeviceAzure ended");
 }
-
+- (void)notifyOfMessage:(NSDictionary *)userInfoMutable {
+    
+    NSError * err;
+    NSData * jsonData = [NSJSONSerialization  dataWithJSONObject:userInfoMutable options:0 error:&err];
+    NSString * jsonString = [[NSString alloc] initWithData:jsonData   encoding:NSUTF8StringEncoding];
+    NSString * notifyJS = [NSString stringWithFormat:@"%@(%@);", notificationCallback, jsonString];
+  
+    [self.webViewEngine evaluateJavaScript:notifyJS completionHandler:nil];
+        
+}
+- (void) registerNotification:(CDVInvokedUrlCommand *)command
+{
+    NSLog(@"view registered for notifications");
+    
+    notificatorReceptorReady = YES;
+    NSData* lastPush = [AppDelegate getLastPush];
+    if (lastPush != nil) {
+        [PushPlugin.pushPlugin notifyOfMessage:lastPush];
+    }
+    
+    CDVPluginResult* pluginResult = nil;
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
 @end

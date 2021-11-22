@@ -3,7 +3,7 @@
 #import "PushPlugin.h"
 
 @implementation AppDelegate (PushPlugin)
-
+static NSData *lastPush;
 // Apple registration success --------------------------------------------------------------------->
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken
 {
@@ -28,10 +28,26 @@
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
     NSLog(@"Received remote (silent) notification");
     
-    // Set app badge -->
+    NSError * err;
+    NSData * jsonData = [NSJSONSerialization  dataWithJSONObject:userInfo options:0 error:&err];
+    lastPush = jsonData;
+    NSString * myString = [[NSString alloc] initWithData:jsonData   encoding:NSUTF8StringEncoding];
+   // NSString *JSONString = [[NSString alloc] initWithBytes:[payload bytes] length:[payload length] encoding:NSUTF8StringEncoding];
+    NSString * notifyJS = [NSString stringWithFormat:@"%@(%@);", @"PushPlugin.onNotificationReceived", myString];
+    NSDictionary *userInfoMutable = [userInfo mutableCopy];
+    
+    [PushPlugin.pushPlugin notifyOfMessage:userInfoMutable];
+   // [self.webViewEngine evaluateJavaScript:notifyJS completionHandler:nil];
+    
     [application setApplicationIconBadgeNumber:[[[userInfo objectForKey:@"aps"] objectForKey:@"badge"] intValue]];
     
     completionHandler(UIBackgroundFetchResultNoData);
+}
++(NSData*)getLastPush
+{
+    NSData* returnValue = lastPush;
+    lastPush = nil;
+    return returnValue;
 }
 
 @end

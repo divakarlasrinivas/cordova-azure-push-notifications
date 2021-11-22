@@ -6,7 +6,8 @@
 
 @interface PushPlugin : CDVPlugin
 
-
++ (PushPlugin *) pushPlugin;
+- (void)ready:(CDVInvokedUrlCommand*)command;
 - (void)registerDevice:(CDVInvokedUrlCommand *)command;
 
 
@@ -14,5 +15,5 @@
 
 
 - (void)unRegisterDevice:(CDVInvokedUrlCommand *)command;
-
+- (void)notifyOfMessage:(NSDictionary *)userInfoMutable;
 @end
