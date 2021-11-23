@@ -18,8 +18,8 @@ var PushPlugin = {
         console.log("PushPlugin :: getNotificationHubSettings");
         return new Promise(function (resolve, reject) {
             AppPreferencesAzure = {
-                "hubNameAzure": 'nhbuksnprdiidevfms6001',
-                "connectionStringAzure": 'Endpoint=sb://nhbuksnprdiidevfms6001.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=cUkJ/u+E/oUOy5QZbdKqgx8aw/QY1JXqw6i4pxeoMVs='
+                "hubNameAzure": 'YOUR_HUB_NAME',
+                "connectionStringAzure": 'CONNECTION_STRING_END_POINT'
             };
             resolve();
         });
