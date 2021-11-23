@@ -32,15 +32,10 @@ static NSData *lastPush;
     NSData * jsonData = [NSJSONSerialization  dataWithJSONObject:userInfo options:0 error:&err];
     lastPush = jsonData;
     NSString * myString = [[NSString alloc] initWithData:jsonData   encoding:NSUTF8StringEncoding];
-   // NSString *JSONString = [[NSString alloc] initWithBytes:[payload bytes] length:[payload length] encoding:NSUTF8StringEncoding];
     NSString * notifyJS = [NSString stringWithFormat:@"%@(%@);", @"PushPlugin.onNotificationReceived", myString];
     NSDictionary *userInfoMutable = [userInfo mutableCopy];
-    
     [PushPlugin.pushPlugin notifyOfMessage:userInfoMutable];
-   // [self.webViewEngine evaluateJavaScript:notifyJS completionHandler:nil];
-    
     [application setApplicationIconBadgeNumber:[[[userInfo objectForKey:@"aps"] objectForKey:@"badge"] intValue]];
-    
     completionHandler(UIBackgroundFetchResultNoData);
 }
 +(NSData*)getLastPush

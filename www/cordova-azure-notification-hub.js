@@ -1,17 +1,6 @@
 var exec = require('cordova/exec');
 var PLUGIN_NAME = 'PushPlugin';
 var AppPreferencesAzure = null;
-
-exports.coolMethod = function (arg0, success, error) {
-    exec(success, error, PLUGIN_NAME, 'coolMethod', [arg0]);
-};
-module.exports.add = function (arg0, success, error) {
-    exec(success, error, PLUGIN_NAME, 'add', [arg0]);
-};
-
-module.exports.getUserData = function (success, error) {
-    exec(success, error, PLUGIN_NAME, 'getUserData', []);
-};
 var PushPlugin = {
     // Get Azure Notification Hub setting --------------------------------------------------------->
     getNotificationHubSettings: function () {
@@ -27,7 +16,7 @@ var PushPlugin = {
     },
     registerDeviceStart: function () {
         console.log("registration started");
-        user = "EXL574";
+        user = "EXL574"; // can be used as a tag during the registration process
         if (user) {
             console.log("Request user: " + user);
             PushPlugin.getNotificationHubSettings().then(function (oNotificationHubSettings) {
